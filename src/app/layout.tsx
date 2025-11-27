@@ -18,11 +18,10 @@ const geistMono = Geist_Mono({
 export async function generateMetadata(): Promise<Metadata> {
     const settings = await getSettings();
 
-    // Use frontend URL for metadata (for OG images, not backend URL)
+    // Always use production domain for OG images (so they're publicly accessible)
     const frontendUrl =
-        process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL
-            ? `https://${process.env.VERCEL_URL}`
-            : "https://hayart.mohammaddaryani.dev";
+        process.env.NEXT_PUBLIC_SITE_URL ||
+        "https://hayart.mohammaddaryani.dev";
 
     return {
         metadataBase: new URL(frontendUrl),
