@@ -29,38 +29,16 @@ export async function generateMetadata({
         "Discover more at HayArt Cultural Centre"
     );
 
-    const images = page.featuredImage?.node?.sourceUrl
-        ? [
-              {
-                  url: page.featuredImage.node.sourceUrl,
-                  width: 1920,
-                  height: 1080,
-                  alt: page.title ?? "Page image",
-              },
-          ]
-        : [
-              {
-                  url: "/logo.svg",
-                  width: 1032,
-                  height: 320,
-                  alt: "HayArt Cultural Centre",
-              },
-          ];
-
     return {
         title: page.title ?? "Untitled Page",
         description,
         openGraph: {
-            title: page.title ?? "Untitled Page",
-            description,
             type: "website",
-            images,
         },
-        twitter: {
-            card: "summary_large_image",
-            title: page.title ?? "Untitled Page",
-            description,
-            images: [images[0].url],
+        other: {
+            "og:image:width": "1200",
+            "og:image:height": "630",
+            "og:image:type": "image/png",
         },
     };
 }

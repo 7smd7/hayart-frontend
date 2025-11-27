@@ -49,20 +49,17 @@ export async function generateMetadata(): Promise<Metadata> {
             siteName: settings.title,
             title: settings.title,
             description: settings.description,
-            images: [
-                {
-                    url: "/favicon.svg",
-                    width: 512,
-                    height: 512,
-                    alt: settings.title,
-                },
-            ],
         },
         twitter: {
             card: "summary_large_image",
             title: settings.title,
             description: settings.description,
-            images: ["/favicon.svg"],
+        },
+        // Additional metadata for better WhatsApp/Telegram/social media previews
+        other: {
+            "og:image:width": "1200",
+            "og:image:height": "630",
+            "og:image:type": "image/png",
         },
         robots: {
             index: true,

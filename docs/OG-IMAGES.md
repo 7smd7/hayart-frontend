@@ -1,0 +1,134 @@
+# Open Graph Images
+
+This project uses Next.js's automatic OG image generation system with **modular, reusable components**. Each page dynamically generates its own social media preview image.
+
+## How It Works
+
+OG images are automatically generated using:
+1. **Shared Layout Components** (`/components/og/OgImageLayout.tsx`) - Reusable templates
+2. **Route-specific Files** (`opengraph-image.tsx`) - Data fetching and composition
+
+This modular approach means you only need to update the layout component once to change the design everywhere.
+
+## Architecture
+
+### Reusable Components (`/components/og/`)
+- **`OgImageLayout`** - Standard layout with badge, title, subtitle, metadata, footer
+- **`OgImageCenteredLayout`** - Centered layout for simple pages (homepage, listings)
+
+### Route-Specific Files
+- **Homepage** (`/app/opengraph-image.tsx`) - Uses `OgImageCenteredLayout`
+- **Blog Listing** (`/app/blog/opengraph-image.tsx`) - Uses `OgImageCenteredLayout` with NEWS badge
+- **Blog Posts** (`/app/blog/[slug]/opengraph-image.tsx`) - Uses `OgImageLayout` with post data
+- **Events** (`/app/event/[slug]/opengraph-image.tsx`) - Uses `OgImageLayout` with event data
+- **Pages** (`/app/[slug]/opengraph-image.tsx`) - Uses `OgImageLayout` with page data
+
+## Image Specifications
+
+- **Size**: 1200 x 630 pixels
+- **Format**: PNG
+- **Generated**: On-demand during build and runtime
+- **Cached**: Automatically by Next.js
+
+## Customization
+
+### To change the design (all pages at once):
+1. Edit `/components/og/OgImageLayout.tsx`
+2. Modify styles, colors, fonts, or layout
+3. Changes automatically apply to all OG images
+
+### To change data for a specific page:
+1. Edit the corresponding `opengraph-image.tsx` file
+2. Pass different props to `OgImageLayout` or `OgImageCenteredLayout`
+3. Only use [supported CSS properties](https://nextjs.org/docs/app/api-reference/functions/image-response#supported-css-properties)
+
+### Supported CSS:
+
+- Flexbox layout (`display: flex`)
+- Basic typography (fontSize, fontWeight, color, etc.)
+- Backgrounds and borders
+- Padding and margins
+- Text alignment and transforms
+
+### Not Supported:
+
+- Grid layouts
+- Complex positioning
+- Most pseudo-elements
+- External images (must be base64 or absolute URLs)
+
+## Testing
+
+After making changes, test your OG images:
+
+1. **Local Preview**: Visit `http://localhost:3000/opengraph-image` (or any route with `/opengraph-image`)
+2. **WhatsApp**: Send your URL to yourself or in a chat - preview appears automatically
+3. **Telegram**: Send your URL in a chat to see the preview
+4. **Twitter**: Use [Twitter Card Validator](https://cards-dev.twitter.com/validator)
+5. **Facebook**: Use [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
+6. **LinkedIn**: Use [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/)
+
+### WhatsApp-Specific Notes:
+- WhatsApp caches previews aggressively - if testing the same URL, clear the chat or use a different URL parameter
+- Images must be publicly accessible (won't work with localhost)
+- 1200x630px images work perfectly in WhatsApp
+- Preview appears within 1-2 seconds of sending the link
+
+## Environment Variables
+
+The OG images automatically use data from your WordPress backend via:
+- `NEXT_PUBLIC_GRAPHQL_URL` - Backend URL for fetching content
+
+Make sure this is set in Vercel's environment variables for production.
+
+## Performance
+
+- Images are generated once and cached
+- No external image dependencies
+- Fast generation with satori engine
+- Optimized for social media crawlers
+
+## Troubleshooting
+
+**Image not showing?**
+- Clear the social media platform's cache (use their debugging tools)
+- Verify the URL is publicly accessible
+- Check that `NEXT_PUBLIC_GRAPHQL_URL` is set in Vercel
+
+**Build errors?**
+- Only use supported CSS properties
+- Avoid `display: inline-flex` (use `flex` instead)
+- Keep layouts simple (flexbox only)
+
+## Example: Adding a New OG Image
+
+To add an OG image for a new route (e.g., `/gallery`):
+
+```tsx
+// app/gallery/opengraph-image.tsx
+import { ImageResponse } from "next/og";
+import { OgImageCenteredLayout } from "@/components/og";
+
+export const alt = "Gallery - HayArt Cultural Centre";
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
+
+export default async function Image() {
+    return new ImageResponse(
+        <OgImageCenteredLayout
+            badge="GALLERY"
+            title="Art Gallery"
+            subtitle="Explore our collection"
+        />,
+        { ...size }
+    );
+}
+```
+
+That's it! Only 16 lines of code.
+
+## Learn More
+
+- [Next.js Metadata Documentation](https://nextjs.org/docs/app/getting-started/metadata-and-og-images)
+- [ImageResponse API](https://nextjs.org/docs/app/api-reference/functions/image-response)
+- [Supported CSS Properties](https://nextjs.org/docs/app/api-reference/functions/image-response#supported-css-properties)

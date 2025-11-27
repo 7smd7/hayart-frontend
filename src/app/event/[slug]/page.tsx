@@ -45,31 +45,16 @@ export async function generateMetadata({
         `${eventDetails}. Discover events at HayArt Cultural Centre.`
     );
 
-    const images = event.featuredImage?.node?.sourceUrl
-        ? [
-              {
-                  url: event.featuredImage.node.sourceUrl,
-                  width: 1920,
-                  height: 1080,
-                  alt: event.title ?? "Event image",
-              },
-          ]
-        : undefined;
-
     return {
         title: event.title ?? "Untitled Event",
         description,
         openGraph: {
-            title: event.title ?? "Untitled Event",
-            description,
             type: "article",
-            images,
         },
-        twitter: {
-            card: "summary_large_image",
-            title: event.title ?? "Untitled Event",
-            description,
-            images: images ? [images[0].url] : undefined,
+        other: {
+            "og:image:width": "1200",
+            "og:image:height": "630",
+            "og:image:type": "image/png",
         },
     };
 }
